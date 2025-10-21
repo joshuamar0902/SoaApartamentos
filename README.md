@@ -1,4 +1,5 @@
-API de Gestión de Alquileres Vacacionales (Spring Boot + JPA)
+API de Gestión de Propiedades
+(Spring Boot + JPA)
 
 Tecnologías Utilizadas
 Backend: Spring Boot, Spring Data JPA
