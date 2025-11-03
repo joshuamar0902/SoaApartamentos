@@ -12,6 +12,8 @@ import com.example.apartamentos.models.TipoPropiedad;
 public interface IPropiedadRepository extends JpaRepository<PropiedadesModel, Long> {
     List<PropiedadesModel> findByTipo(TipoPropiedad tipo); 
 
+    boolean existsByPropietarioId(Long propietarioId);
+
     
 }
 
