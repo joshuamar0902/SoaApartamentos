@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import com.example.apartamentos.models.ClienteModel;
 import com.example.apartamentos.models.ReseñasModel;
 import com.example.apartamentos.services.ReseñasService;
+
+
 
 @RestController
 @RequestMapping("/api/reseñas")
