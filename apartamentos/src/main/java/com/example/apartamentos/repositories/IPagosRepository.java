@@ -7,6 +7,7 @@ import com.example.apartamentos.models.PagosModel;
 
 @Repository
 public interface IPagosRepository extends JpaRepository<PagosModel, Long> {
+    boolean existsByReservacionId(Long reservacionId);
 
     
 }
