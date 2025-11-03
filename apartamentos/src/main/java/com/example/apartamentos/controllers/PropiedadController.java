@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.apartamentos.models.PropiedadesModel;
 import com.example.apartamentos.models.TipoPropiedad;
+import com.example.apartamentos.repositories.IReservacionesRepository;
 import com.example.apartamentos.services.PropiedadService;
 
 
@@ -26,6 +28,9 @@ public class PropiedadController {
     
     @Autowired
     private PropiedadService propiedadService;
+
+    @Autowired
+    private IReservacionesRepository reservacionesRepository;
 
     @GetMapping
     public List<PropiedadesModel> getAllPropiedades() {
@@ -73,16 +78,26 @@ public class PropiedadController {
         }
     }
 
-    // Eliminar una propiedad
+    // Eliminar una propiedad (CON VALIDACIÓN)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePropiedad(@PathVariable Long id) {
+    public ResponseEntity<?> deletePropiedad(@PathVariable Long id) {
+        
+        boolean tieneReservaciones = reservacionesRepository.existsByPropiedadId(id);
+        
+        if (tieneReservaciones) {
+            java.util.Map<String, String> error = new java.util.HashMap<>();
+            error.put("error", "La propiedad tiene una reservación activa y no puede ser eliminada.");
+            
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT); // HTTP 409
+        }
         Optional<PropiedadesModel> propiedad = propiedadService.getPropiedadById(id);
-        if (propiedad.isPresent()) {
-            propiedadService.deletePropiedad(id);
-            return ResponseEntity.noContent().build();
-        } else {
+        if (propiedad.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        
+        propiedadService.deletePropiedad(id); 
+        
+        return ResponseEntity.noContent().build();
     }
 
 }
