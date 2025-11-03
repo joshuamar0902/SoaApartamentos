@@ -7,6 +7,7 @@ import com.example.apartamentos.models.MensajesModel;
 
 @Repository
 public interface IMensajesRepository extends JpaRepository<MensajesModel, Long> {
+    boolean existsByReservacionId(Long reservacionId);
 
     
 }
