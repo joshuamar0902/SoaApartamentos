@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.apartamentos.models.ClienteModel;
 import com.example.apartamentos.models.TipoCliente;
+import com.example.apartamentos.repositories.IPropiedadRepository;
+import com.example.apartamentos.repositories.IReservacionesRepository;
 import com.example.apartamentos.services.ClienteService;
+
+
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -24,6 +29,12 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private IReservacionesRepository reservacionesRepository;
+
+    @Autowired
+    private IPropiedadRepository propiedadRepository;
 
     // Obtener todos los clientes
     @GetMapping
@@ -86,15 +97,37 @@ public class ClienteController {
 
     }
 
-    // Eliminar un cliente
+    // De nuevo en ClienteController.java
+
+// ... (tus métodos GET, POST, PUT) ...
+
+    // Eliminar un cliente (CON VALIDACIÓN)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCliente(@PathVariable Long id) {
+        
+        boolean tieneReservaciones = reservacionesRepository.existsByClienteId(id);
+        boolean tienePropiedad = propiedadRepository.existsByPropietarioId(id);
+        
+        if (tieneReservaciones) {
+            java.util.Map<String, String> error = new java.util.HashMap<>();
+            error.put("error", "El cliente tiene una reservación activa y no puede ser eliminado.");
+            
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT); // HTTP 409
+        }
+
+        if(tienePropiedad){
+            java.util.Map<String, String> error = new java.util.HashMap<>();
+            error.put("error", "El cliente es propietario de una propiedad y no puede ser eliminado.");
+            
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT); // HTTP 409
+        }
         Optional<ClienteModel> cliente = clienteService.getClienteById(id);
-        if (cliente.isPresent()) {
-            clienteService.deleteCliente(id);
-            return ResponseEntity.noContent().build();
-        } else {
+        if (cliente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        
+        clienteService.deleteCliente(id); 
+        
+        return ResponseEntity.noContent().build();
     }
 }
