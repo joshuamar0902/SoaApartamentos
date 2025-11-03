@@ -8,6 +8,6 @@ import com.example.apartamentos.models.ReseñasModel;
 @Repository
 public interface IReseñasRepository extends JpaRepository<ReseñasModel, Long> {
 
-    
+    boolean existsByReservacionId(Long reservacionId);
 }
 
