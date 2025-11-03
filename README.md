@@ -1,3 +1,15 @@
+*ACTUALIZACIONES*
+--VALIDACIONES--
+
+<img width="921" height="724" alt="image" src="https://github.com/user-attachments/assets/7a9deefc-c1f7-4df5-9e1b-1a78b8f84348" />
+
+<img width="921" height="757" alt="image" src="https://github.com/user-attachments/assets/d61e30e9-7dfe-4e89-9e14-ed945db3de47" />
+
+<img width="921" height="785" alt="image" src="https://github.com/user-attachments/assets/2c9f2364-6691-40c6-9ebe-7e0a7dc74436" />
+
+
+
+
 API de Gestión de Propiedades
 (Spring Boot + JPA)
 
